@@ -1,25 +1,17 @@
 import React, { Component } from "react";
 import Categories from "../components/Categories";
 import Header from "../components/Header";
-import { getCategories, getImages } from "./../apis/index";
+import { connect } from "react-redux";
+import { getCategories, getImages } from "../redux/actions";
 
 class App extends Component {
-  state = {
-    categories: [],
-    images: [],
-  };
-
-  async componentDidMount() {
-    const categories = await getCategories();
-    const images = await getImages();
-    this.setState({
-      categories: categories.data,
-      images: images.data,
-    });
+  componentDidMount() {
+    this.props.dispatch(getCategories());
+    this.props.dispatch(getImages());
   }
 
   render() {
-    const { categories, images } = this.state;
+    const { categories, images } = this.props.state;
     return (
       <div>
         <Header />
@@ -29,4 +21,10 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    state,
+  };
+}
+
+export default connect(mapStateToProps)(App);
